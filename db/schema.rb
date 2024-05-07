@@ -28,6 +28,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_07_114233) do
   create_table "loyalty_tiers", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.integer "points"
+    t.integer "status", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_loyalty_tiers_on_user_id"

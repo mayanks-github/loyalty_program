@@ -3,7 +3,7 @@ class CreateRewards < ActiveRecord::Migration[7.1]
     create_table :rewards do |t|
       t.references :user, null: false, foreign_key: true
       t.string :reward_type
-      t.integer :dicount_percentage
+      t.integer :dicount_percentage, default: 0
       t.text :description
 
       t.timestamps
