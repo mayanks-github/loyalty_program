@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_07_110709) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_07_112028) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -34,6 +34,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_07_110709) do
     t.index ["user_id"], name: "index_profiles_on_user_id"
   end
 
+  create_table "transactions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.decimal "amount"
+    t.boolean "spent_in_foreign_country"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_transactions_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -43,4 +52,5 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_07_110709) do
 
   add_foreign_key "addresses", "users"
   add_foreign_key "profiles", "users"
+  add_foreign_key "transactions", "users"
 end
