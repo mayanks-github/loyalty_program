@@ -1,7 +1,8 @@
 class LoyaltyTier < ApplicationRecord
   belongs_to :user
   
-  after_create :update_user_status, :generate_reward_for_user
+  after_create :update_user_status
+  after_create :generate_reward_for_user
 
   enum status: { active: 0, redeemed: 1, expired: 2 }
 
@@ -10,18 +11,10 @@ class LoyaltyTier < ApplicationRecord
   private
 
   def generate_reward_for_user
-    user = self.user
-    loyalty_tiers = user.loyalty_tiers.active.created_in_current_month
-    issue_free_coffe_reward if loyalty_tiers.pluck(:points.sum) > 100
-  end
-
-  def issue_free_coffe_reward
-    user = self.user
-    user.reward.create(reward_type: "Free Coffee", dicount_percentage: 100, description: "User can buy free coffee from store.")
-  end
+    user.reward.create(reward_type: "5% rebate", dicount_percentage: 5, description: "five percent rebate") if user.transactions.where("amount > 100")&.count > 10 
+  end 
 
   def update_user_status
-    user = self.user
     total_points = user.loyalty_tiers.pluck(:points).sum
   
     case total_points
@@ -29,6 +22,7 @@ class LoyaltyTier < ApplicationRecord
       user.profile.update(status: 1)
     when 5001..
       user.profile.update(status: 2)
+      user.reward.create(reward_type: "Lounge access", dicount_percentage: 100, description: "4x Airport Lounge Access")
     end
-  end  
+  end
 end
